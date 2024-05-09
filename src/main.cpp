@@ -24,7 +24,7 @@ void test(
   std::vector<data_holder> args
 );
 
-int main() {
+int main(int argc, char* argv[]) {
   std::string test_regex1 = "abc";
   std::string test_value1 = "abc";
   std::string test_regex2 = "ab.";

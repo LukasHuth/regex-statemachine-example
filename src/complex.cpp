@@ -53,7 +53,6 @@ bool StateMachinePart::matches(char c) {
 }
 bool StateMachinePart::test(std::string value) {
   DEBUG_PRINT("testing: " << value)
-  // std::cout << "value: " << value << std::endl << "path_to_end: " << ((this->has_direct_path_to_end) ? "true" : "false") << std::endl;
   if(value.length() == 0) return this->has_direct_path_to_end;
   if(value.length() == 0) return this->has_direct_path_to_end;
   char next_char = value[0];
@@ -76,8 +75,6 @@ bool StateMachinePart::testStart(std::string value) {
   if(value.length() == 0) return this->has_direct_path_to_end;
   DEBUG_PRINT("testing: " << value)
   char next_char = value[0];
-  // std::cout << "next_char: " << next_char << std::endl;
-  // std::cout << "hasNextKey(next_char): " << (this->hasNextKey(next_char) ? "true" : "false") << std::endl;
   if(this->hasNextKey(next_char)) return this->next[next_char]->test(value.substr(1));
   if(this->hasAnyKey()) return this->next[any_char]->test(value.substr(1));
   DEBUG_PRINT("Beeing here")
@@ -92,7 +89,7 @@ void generateStateMachineTo(std::string value, StateMachinePart* node) {
     node->createPathTo(value[0], value[0] == '.', false, true);
     return;
   }
-  std::cout << "trying for value: " << value << std::endl;
+  DEBUG_PRINT("trying for value: " << value)
   char next_char = value[0];
   bool is_any = next_char == '.';
   long unsigned int repeating_offset = 1;
@@ -109,10 +106,10 @@ void generateStateMachineTo(std::string value, StateMachinePart* node) {
   bool repeating = (value.length() > repeating_offset) ? value[repeating_offset] == '*' : false;
   if(repeating) replace_size++;
   bool direct_path_to_end = value.length() == replace_size;
-  std::cout << "next_char: " << next_char << "|is_any: " << (is_any ? "true" : "false") << "|repeating:" << (repeating ? "true" : "false") << std::endl; 
+  DEBUG_PRINT("next_char: " << next_char << "|is_any: " << (is_any ? "true" : "false") << "|repeating:" << (repeating ? "true" : "false"))
   StateMachinePart* element = node->createPathTo(next_char, is_any, repeating, direct_path_to_end);
   if(!direct_path_to_end) {
-    std::cout << "value = " << value << std::endl << "value.substr(" << replace_size << ") = " << value.substr(replace_size) << std::endl;
+    DEBUG_PRINT("value = " << value << std::endl << "value.substr(" << replace_size << ") = " << value.substr(replace_size))
     generateStateMachineTo(value.substr(replace_size), element);
   }
   if(element->isOptional()) {
@@ -121,7 +118,6 @@ void generateStateMachineTo(std::string value, StateMachinePart* node) {
   }
 }
 StateMachinePart* StateMachinePart::createPathTo(char c, bool is_any, bool repeating, bool direct_path_to_end) {
-  // std::cout << "c: " << c << std::endl;
   StateMachinePart* smp = new StateMachinePart(c, is_any, repeating, direct_path_to_end);
   this->next[smp->matching_char] = smp;
   return smp;
