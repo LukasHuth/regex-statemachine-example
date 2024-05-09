@@ -2,11 +2,15 @@
 #include "headers/complex.hpp"
 #include <cassert>
 #include <chrono>
+#include <cstdlib>
 #include <ratio>
 #include <string>
 #include <unordered_map>
+#include <unordered_set>
 #include <vector>
 #include <iostream>
+
+#define is_active(x) enabled_tests.find(x) != enabled_tests.end()
 
 struct data_holder {
   std::string regex;
@@ -23,8 +27,19 @@ void test(
   std::vector<bool(*)(std::string,std::string, complex::StateMachinePart)> funcs,
   std::vector<data_holder> args
 );
-
+const int test_amount = 7;
 int main(int argc, char* argv[]) {
+  std::unordered_set<int> enabled_tests;
+  if(argc == 1) {
+    for(int i = 1; i <= test_amount; i++) {
+      enabled_tests.insert(i);
+    }
+  } else {
+    for(int i = 1; i < argc; i++) {
+      int result = atoi(argv[i]);
+      enabled_tests.insert(result);
+    }
+  }
   std::string test_regex1 = "abc";
   std::string test_value1 = "abc";
   std::string test_regex2 = "ab.";
@@ -43,17 +58,18 @@ int main(int argc, char* argv[]) {
   funcs.push_back(simple::matches_t);
   funcs.push_back(complex::matches);
   std::vector<data_holder> args;
-  args.push_back(data_holder{test_regex1, test_value1, true, complex::generateStateMachine(test_regex1)});
-  args.push_back(data_holder{test_regex2, test_value2, true, complex::generateStateMachine(test_regex2)});
-  args.push_back(data_holder{test_regex3, test_value3, true, complex::generateStateMachine(test_regex3)});
-  args.push_back(data_holder{test_regex4, test_value4, true, complex::generateStateMachine(test_regex4)});
-  args.push_back(data_holder{test_regex5, test_value5, false, complex::generateStateMachine(test_regex5)});
-  args.push_back(data_holder{test_regex6, test_value6, true, complex::generateStateMachine(test_regex6)});
-  args.push_back(data_holder{test_regex7, test_value7, true, complex::generateStateMachine(test_regex7)});
+  if(is_active(1))args.push_back(data_holder{test_regex1, test_value1, true, complex::generateStateMachine(test_regex1)});
+  if(is_active(2))args.push_back(data_holder{test_regex2, test_value2, true, complex::generateStateMachine(test_regex2)});
+  if(is_active(3))args.push_back(data_holder{test_regex3, test_value3, true, complex::generateStateMachine(test_regex3)});
+  if(is_active(4))args.push_back(data_holder{test_regex4, test_value4, true, complex::generateStateMachine(test_regex4)});
+  if(is_active(5))args.push_back(data_holder{test_regex5, test_value5, false, complex::generateStateMachine(test_regex5)});
+  if(is_active(6))args.push_back(data_holder{test_regex6, test_value6, true, complex::generateStateMachine(test_regex6)});
+  if(is_active(7))args.push_back(data_holder{test_regex7, test_value7, true, complex::generateStateMachine(test_regex7)});
   test(funcs, args);
   measure(funcs, args);
 }
 
+const std::string function_names[2] = {"simple::match", "complex::match"};
 void measure(
   std::vector<bool(*)(std::string,std::string, complex::StateMachinePart)> funcs,
   std::vector<data_holder> args
@@ -75,7 +91,7 @@ void measure(
       micro_sum += ms_double;
       amount++;
     }
-    std::cout << "the " << func_count++ << "th function took " << micro_sum.count() / ((double) amount) << "μs per iteration for 1 million iterations" << std::endl;
+    std::cout << "the " << function_names[func_count++] << " function took " << micro_sum.count() / ((double) amount) << "μs per iteration for 1 million iterations" << std::endl;
   }
 }
 void test(
@@ -84,9 +100,9 @@ void test(
 )
 {
   for(auto function : funcs) {
-    int position = 0;
+    // int position = 0;
     for(struct data_holder dh : args) {
-      std::cout << "arg position: " << position++ << std::endl;
+      // std::cout << "arg position: " << position++ << std::endl;
       assert(dh.expected == function(dh.regex, dh.value, dh.state_machine));
     }
   }
