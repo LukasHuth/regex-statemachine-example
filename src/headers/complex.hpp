@@ -1,6 +1,9 @@
 #pragma once
 #include <string>
 #include <unordered_map>
+#include <cstdlib>
+#include <iostream>
+#include <sstream>
 namespace complex {
 bool matches(std::string,std::string);
 class StateMachinePart {

@@ -1,14 +1,10 @@
+#include "headers/complex.hpp"
 #define DEBUG_
 #ifdef DEBUG
 #define DEBUG_PRINT(x) std::cout << x << std::endl;
 #else
 #define DEBUG_PRINT(x)
 #endif
-#include "headers/complex.hpp"
-#include <cstdlib>
-#include <iostream>
-#include <sstream>
-#include <unordered_map>
 
 namespace complex {
 const char any_char = 1;

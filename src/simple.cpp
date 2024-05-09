@@ -1,5 +1,4 @@
 #include "headers/simple.hpp"
-#include <iostream>
 
 #define DEBUG_
 #ifdef DEBUG

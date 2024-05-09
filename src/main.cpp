@@ -1,14 +1,4 @@
 #include "headers/main.hpp"
-#include "headers/complex.hpp"
-#include <cassert>
-#include <chrono>
-#include <cstdlib>
-#include <ratio>
-#include <string>
-#include <unordered_map>
-#include <unordered_set>
-#include <vector>
-#include <iostream>
 
 #define is_active(x) enabled_tests.find(x) != enabled_tests.end()
 
@@ -54,9 +44,11 @@ int main(int argc, char* argv[]) {
   std::string test_value6 = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabaaaaaaaaaaaaaacaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaadaaaaaaaaaaaaaaaaaaaaaaaaacaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaeaaaaaaaaaaaaaaaaaaaaaaaaaaa";
   std::string test_regex7 = ".*.*a.*";
   std::string test_value7 = "abbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb";
+  // To test it against more functions, just add the pointer to the function to this vector
   std::vector<bool(*)(std::string,std::string,complex::StateMachinePart)> funcs;
   funcs.push_back(simple::matches_t);
   funcs.push_back(complex::matches);
+  // To add more tests just add the regex, value, expected result and generated statemachine for the regex to this function
   std::vector<data_holder> args;
   if(is_active(1))args.push_back(data_holder{test_regex1, test_value1, true, complex::generateStateMachine(test_regex1)});
   if(is_active(2))args.push_back(data_holder{test_regex2, test_value2, true, complex::generateStateMachine(test_regex2)});
